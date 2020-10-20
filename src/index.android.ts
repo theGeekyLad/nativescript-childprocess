@@ -1,68 +1,113 @@
-import { Utils } from '@nativescript/core';
+import { Application, Utils } from '@nativescript/core';
 
-declare const com: any; // bypass not having typings for xsensor lib
+export class ChildProcess {
 
-export class AndroidSensors {
-  private XSensorClass;
+  private process: java.lang.Process;
+  private errors: any;
 
-  constructor(liteData: boolean = false) {
-    this.XSensorClass = new com.github.bradmartin.xsensor.XSensors(
-      Utils.android.getApplicationContext(),
-      liteData
-    );
-  }
-
-  setListener(listener) {
-    if (listener) {
-      this.XSensorClass.setListener(listener);
+  constructor(startCommand: string) {
+    try {
+      this.process = java.lang.Runtime.getRuntime().exec(startCommand)
+    } catch (err) {
+      this.errors = err
     }
   }
 
-  startSensor(
-    sensor: number,
-    delay: number,
-    maxReportLatency?: number
-  ): android.hardware.Sensor {
-    if (maxReportLatency) {
-      return this.XSensorClass.startSensorWithReportLatency(
-        sensor,
-        delay,
-        maxReportLatency
-      );
-    } else {
-      return this.XSensorClass.startSensor(sensor, delay);
-    }
+  getErrors(): any {
+    return this.errors
   }
 
-  stopSensor(sensor: android.hardware.Sensor) {
-    if (sensor) {
-      this.XSensorClass.stopSensor(sensor);
-    }
+  clearErrors(): void {
+    this.errors = null
   }
 
-  getDeviceSensors(): android.hardware.Sensor[] {
-    const sensorList = this.XSensorClass.getDeviceSensors();
-    const result = [];
-    // iterate the sensor List and put the sensors into a plain array to return
-    for (let i = 0; i < sensorList.size(); i++) {
-      const sensor = sensorList.get(i) as android.hardware.Sensor;
-      result.push(sensor);
-    }
-    return result;
+  getProcess(): java.lang.Process {
+    return this.process
   }
 
-  flush(): boolean {
-    return this.XSensorClass.flush();
+  getOutput(): string {
+    let br: java.io.BufferedReader = new java.io.BufferedReader(new java.io.InputStreamReader(this.process.getInputStream()))
+    let output: string = '', line: string
+    while ((line = br.readLine()) != null)
+      output += line
+    return output
   }
+
+  static run(param0: Array<string>): Promise<any>;
+  static run(param0: string, param1: native.Array<string>, param2: java.io.File): Promise<any>;
+  static run(param0: string, param1: native.Array<string>): Promise<any>;
+  static run(param0: native.Array<string>, param1: native.Array<string>, param2: java.io.File): Promise<any>;
+  static run(param0: string): Promise<any>;
+  static run(param0: native.Array<string>, param1: native.Array<string>): Promise<any>;
+  static run(param0: any, param1?: any, param2?: any): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+      try {
+        let proc: java.lang.Process
+
+        if (param0 != null && param1 == null && param2 == null)
+          proc = java.lang.Runtime.getRuntime().exec(param0)
+        else if (param0 != null && param1 != null && param2 == null)
+          proc = java.lang.Runtime.getRuntime().exec(param0, param1)
+        else if (param0 != null && param1 != null && param2 != null)
+          proc = java.lang.Runtime.getRuntime().exec(param0, param1, param2)
+
+        proc.waitFor()
+
+        let br: java.io.BufferedReader = new java.io.BufferedReader(new java.io.InputStreamReader(proc.getInputStream()))
+        let output: string = '', line: string
+        while ((line = br.readLine()) != null)
+          output += line
+        resolve(output)
+      } catch (err) {
+        reject(err)
+      }
+    })
+  }
+
+  runInteractive(command: string): ChildProcess {
+    try {
+      let bw: java.io.BufferedWriter = new java.io.BufferedWriter(new java.io.OutputStreamWriter(this.process.getOutputStream()))
+      bw.write(command + '\r\n')
+      bw.flush()
+      bw.close()
+    } catch (err) {
+      this.errors = err
+    }
+    return this
+  }
+
+  closeSafely(exitCommand: string): Promise<ChildProcess> {
+    return new Promise<ChildProcess>((resolve, reject) => {
+      try {
+        this.runInteractive(exitCommand)
+        this.process.waitFor()
+        resolve(this)
+      } catch (err) {
+        this.errors = err
+        reject(this)
+      }
+    })
+  }
+
+  closeAbruptly(): Promise<ChildProcess> {
+    return new Promise<ChildProcess>((resolve, reject) => {
+      try {
+        this.process.destroy()
+        this.process.waitFor()
+        resolve(this)
+      } catch (err) {
+        this.errors = err
+        reject(this)
+      }
+    })
+  }
+
+  toString(): string {
+    return JSON.stringify({
+      output: this.getOutput(),
+      errors: this.errors
+    })
+  }
+
 }
 
-// simple alias for the XSensorListener interface
-export const AndroidSensorListener =
-  com.github.bradmartin.xsensor.XSensorListener;
-
-export enum SensorDelay {
-  'FASTEST' = android.hardware.SensorManager.SENSOR_DELAY_FASTEST,
-  'GAME' = android.hardware.SensorManager.SENSOR_DELAY_GAME,
-  'UI' = android.hardware.SensorManager.SENSOR_DELAY_UI,
-  'NORMAL' = android.hardware.SensorManager.SENSOR_DELAY_NORMAL,
-}
