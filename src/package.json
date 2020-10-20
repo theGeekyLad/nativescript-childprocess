@@ -1,7 +1,7 @@
 {
   "name": "nativescript-childprocess",
   "version": "1.0.0",
-  "description": "NativeScript plugin to run shell commands on Android devices.",
+  "description": "A NativeScript plugin that allows access to creating and running Java Processes in Android using Node.js child process style.",
   "main": "index",
   "typings": "index.android.d.ts",
   "nativescript": {
@@ -37,6 +37,7 @@
     "name": "Rahul Pillai",
     "email": "rahul.pillai03@gmail.com"
   },
+  "repository": "https://github.com/theGeekyLad/nativescript-childprocess/",
   "license": "MIT",
   "readmeFilename": "README.md",
   "devDependencies": {
