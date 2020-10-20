@@ -22,8 +22,7 @@
   "dependencies": {
     "@nativescript/core": "~7.0.0",
     "@nativescript/theme": "~2.3.0",
-    "nativescript-childprocess": "file:../../../nativescript-childprocess/src",
-    "nativescript-execprocess": "file:../../nativescript-execprocess/src"
+    "nativescript-childprocess": "file:../src"
   },
   "devDependencies": {
     "@nativescript/android": "7.0.0",
