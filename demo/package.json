@@ -1,24 +1,18 @@
 {
-  "name": "@nativescript/template-hello-world-ts",
+  "name": "@nativescript/process-demo",
   "main": "main.js",
   "version": "7.0.3",
-  "author": "NativeScript Team <oss@nativescript.org>",
-  "description": "NativeScript Application",
-  "license": "SEE LICENSE IN <your-license-filename>",
+  "author": "Rahul Pillai<rahul.pillai03@gmail.com>",
+  "description": "NativeScript demo application for Child Process plugin",
   "publishConfig": {
     "access": "public"
   },
   "keywords": [
     "nativescript",
     "mobile",
-    "{N}",
-    "template"
+    "plugin"
   ],
-  "repository": "<fill-your-repository-here>",
-  "bugs": {
-    "url": "https://github.com/NativeScript/NativeScript/issues"
-  },
-  "homepage": "https://github.com/NativeScript/nativescript-app-templates",
+  "repository": "https://github.com/theGeekyLad/nativescript-childprocess/tree/master/demo",
   "dependencies": {
     "@nativescript/core": "~7.0.0",
     "@nativescript/theme": "~2.3.0",
@@ -30,6 +24,5 @@
     "@nativescript/webpack": "~3.0.0",
     "typescript": "~3.9.0"
   },
-  "private": "true",
-  "readme": "NativeScript Application"
+  "private": "true"
 }
