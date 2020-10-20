@@ -9,7 +9,10 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "skipLibCheck": true,
-    "lib": ["es6", "dom"],
+    "lib": [
+      "es6",
+      "dom"
+    ],
     "sourceMap": true,
     "pretty": true,
     "allowUnreachableCode": false,
@@ -22,6 +25,8 @@
     "noFallthroughCasesInSwitch": true,
     "baseUrl": "."
   },
-  "exclude": ["node_modules"],
+  "exclude": [
+    "node_modules"
+  ],
   "compileOnSave": false
 }
