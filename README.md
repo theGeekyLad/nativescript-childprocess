@@ -2,6 +2,9 @@
 
 A NativeScript plugin for creation and execution of Android `java.lang.Process`es in Node.js child process style! As a webapp developer, you needn't worry about familiarizing yourself with the Java `Process` API, thanks to this plugin.
 
+<!-- ![](demo-screencast.gif) -->
+<img src="demo-screencast.gif" width="300">
+
 ## Installation
 
 - For NativeScript 7+:
